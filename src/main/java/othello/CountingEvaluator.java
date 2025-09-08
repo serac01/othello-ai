@@ -8,14 +8,13 @@ package main.java.othello;
 public class CountingEvaluator implements OthelloEvaluator {
 
 	public int evaluate(OthelloPosition pos) {
-		OthelloPosition position = (OthelloPosition) pos;
-		int blackSquares = 0;
+        int blackSquares = 0;
 		int whiteSquares = 0;
 		for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
 			for (int j = 1; j <= OthelloPosition.BOARD_SIZE; j++) {
-				if (position.board[i][j] == 'W')
+				if (((OthelloPosition) pos).board[i][j] == 'W')
 					whiteSquares++;
-				if (position.board[i][j] == 'B')
+				else if (((OthelloPosition) pos).board[i][j] == 'B')
 					blackSquares++;
 			}
 		}

@@ -44,10 +44,10 @@ The engine uses **Alpha-Beta pruning** combined with **Iterative Deepening Searc
 - `Othello`: The main program. Currently, uses a fixed depth to search for a move. Modify this file to implement Iterative Deepening Search (IDS) using the time limit argument.
 - `OthelloPosition`: Represents the game state. You must complete the missing parts marked TODO (e.g., generating legal moves, applying moves, checking terminal states).
 - `OthelloAction`: Represents a move.
-- `OthelloAlgorithm`: Interface for search algorithms. Your `AlphaBeta` class should implement this.
+- `OthelloAlgorithm`: Interface for search algorithms.
 - `OthelloEvaluator`: Interface for evaluation functions. You can start with the provided CountingEvaluator (counts pieces) and then design a better heuristic.
 - `AlphaBeta`: Skeleton for Alpha-Beta search. You need to complete the search logic and add time control checks for IDS.
-- `othello.sh`: A bash script to compile and run your program. Modify it if necessary to work with your solution (it should work as is for Java and Python). It takes three arguments: position_string time_limit do_compile.
+- `othello.sh`: A bash script to compile and run your program. Modify it if necessary to work with your solution. It takes three arguments: position_string time_limit do_compile.
 
 
 ```bash

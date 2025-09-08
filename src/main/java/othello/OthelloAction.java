@@ -1,110 +1,70 @@
 package main.java.othello;
 
 /**
- * This class represents a 'move' in a game. The move is simply represented by
- * two integers: the row and the column where the player puts the marker. In
- * addition, the <code>main.java.othello.OthelloAction</code> has a field where the estimated
- * value of the move can be stored during computations.
- * 
- * @author Henrik Bj&ouml;rklund
+ * This class represents a 'move' in a game.
+ *
+ * @author Henrik Bj&ouml; rklund; serac01; josigabor
  */
-
 public class OthelloAction {
-
-    /** The row where the marker is placed. */
     protected int row = -1;
-
-    /** The column where the marker is placed. */
     protected int column = -1;
-
-    /** The estimated value of the move. */
-    protected int value = 0;
-
-    /** True if the player has to pass, i.e., if there is no legal move. */
+    protected int estimatedValue = 0;
     protected boolean pass = false;
 
-    /**
-     * Creates a new <code>main.java.othello.OthelloAction</code> with row <code>r</code>, column
-     * <code>c</code>, and value 0.
-     */
-    public OthelloAction(int r, int c) {
-        row = r;
-        column = c;
-        value = 0;
+    public OthelloAction(int row, int column) {
+        this.row = row;
+        this.column = column;
+        this.estimatedValue = 0;
     }
 
-    public OthelloAction(int r, int c, boolean p) {
-        row = r;
-        column = c;
-        value = 0;
-        pass = p;
+    public OthelloAction(int row, int column, boolean pass) {
+        this.row = row;
+        this.column = column;
+        this.estimatedValue = 0;
+        this.pass = pass;
     }
 
     public OthelloAction(String s) {
         if (s.equals("pass")) {
-            row = 0;
-            column = 0;
-            value = 0;
-            pass = true;
+            this.row = 0;
+            this.column = 0;
+            this.estimatedValue = 0;
+            this.pass = true;
         } else {
-            row = Character.getNumericValue(s.charAt(1));
-            column = Character.getNumericValue(s.charAt(3));
-            value = 0;
+            this.row = Character.getNumericValue(s.charAt(1));
+            this.column = Character.getNumericValue(s.charAt(3));
+            this.estimatedValue = 0;
         }
     }
 
-    /** Sets the estimated value of the move. */
-    public void setValue(int v) {
-        value = v;
+    public void setEstimatedValue(int estimatedValue) {
+        this.estimatedValue = estimatedValue;
+    }
+    public int getEstimatedValue() {
+        return this.estimatedValue;
     }
 
-    /** Returns the estimated value of the move. */
-    public int getValue() {
-        return value;
+    public void setColumn(int column) {
+        this.column = column;
     }
-
-    /** Sets the column where the marker is to be placed. */
-    public void setColumn(int c) {
-        column = c;
-    }
-
-    /** Returns the column where the marker is to be placed. */
     public int getColumn() {
-        return column;
+        return this.column;
     }
 
-    /** Sets the row where the marker is to be placed. */
-    public void setRow(int r) {
-        row = r;
+    public void setRow(int row) {
+        this.row = row;
     }
-
-    /** Returns the row where the marker is to be placed. */
     public int getRow() {
-        return row;
+        return this.row;
     }
 
-    /**
-     * Sets the boolean that indicates whether this is a pass move. This should only
-     * be true if there are no legal moves.
-     */
-    public void setPassMove(boolean b) {
-        pass = b;
+    public void setPassMove(boolean pass) {
+        this.pass = pass;
     }
-
-    /**
-     * Returns true if this is a pass move, indicating that the player has no legal
-     * moves. Otherwise returns false.
-     */
     public boolean isPassMove() {
-        return pass;
+        return this.pass;
     }
 
-    public void print() {
-        if (pass) {
-            System.out.println("pass");
-        } else {
-            System.out.println("(" + row + "," + column + ")");
-        }
-    }
+    public void print() { System.out.println(pass ? "pass" : "(" + row + "," + column + ")"); }
 
 }

@@ -1,11 +1,10 @@
 package main.java.othello;
 
 /**
- * This is where you implement the alpha-beta algorithm.
- * See <code>main.java.othello.OthelloAlgorithm</code> for details
+ * Alpha-Beta search algorithm.
+ * TODO: complete the search logic and add time control checks for IDS
  * 
- * @author Henrik Bj&ouml;rklund
- *
+ * @author Henrik Bj&ouml; rklund; serac01; josigabor
  */
 public class AlphaBeta implements OthelloAlgorithm {
 	protected int searchDepth;

@@ -2,7 +2,7 @@ package main.java.othello;
 
 /**
  * This interface defines the mandatory methods for game playing algorithms,
- * i.e., algorithms that take an <code>main.java.othello.OthelloAlgorithm</code> and return a
+ * i.e., algorithms that take an <code>OthelloAlgorithm</code> and return a
  * suggested move for the player who has the move.
  * 
  * The algorithm only defines the search method. The heuristic evaluation of
@@ -14,18 +14,12 @@ package main.java.othello;
 
 public interface OthelloAlgorithm {
 
-	/**
-	 * Sets the <code>main.java.othello.OthelloEvaluator</code> the algorithm is to use for
-	 * heuristic evaluation.
-	 */
-	public void setEvaluator(OthelloEvaluator evaluator);
+	// Sets the algorithm to use for heuristic evaluation.
+	void setEvaluator(OthelloEvaluator evaluator);
 
-	/**
-	 * Returns the <code>main.java.othello.OthelloAction</code> the algorithm considers to be the
-	 * best move.
-	 */
-	public OthelloAction evaluate(OthelloPosition position);
+	//Returns what the algorithm considers to be the best move.
+	OthelloAction evaluate(OthelloPosition position);
 
-	/** Sets the maximum search depth of the algorithm. */
-	public void setSearchDepth(int depth);
+	// Sets the maximum search depth of the algorithm
+	void setSearchDepth(int depth);
 }
