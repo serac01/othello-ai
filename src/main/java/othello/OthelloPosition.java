@@ -1,3 +1,5 @@
+package main.java.othello;
+
 import java.util.*;
 
 /**
@@ -9,7 +11,7 @@ import java.util.*;
 
 public class OthelloPosition {
 
-    /** For a normal Othello game, BOARD_SIZE is 8. */
+    /** For a normal main.java.othello.Othello game, BOARD_SIZE is 8. */
     protected static final int BOARD_SIZE = 8;
 
     /** True if the first player (white) has the move. */
@@ -78,7 +80,7 @@ public class OthelloPosition {
     /* getMoves and helper functions */
 
     /**
-     * Returns a linked list of <code>OthelloAction</code> representing all possible
+     * Returns a linked list of <code>main.java.othello.OthelloAction</code> representing all possible
      * moves in the position. If the list is empty, there are no legal moves for the
      * player who has the move.
      */
@@ -328,10 +330,13 @@ public class OthelloPosition {
         /*
          * TODO: write the code for this method and whatever helper functions it needs.
          */
+
+        // TODO: remove this
+        return null;
     }
 
     /**
-     * Returns a new <code>OthelloPosition</code>, identical to the current one.
+     * Returns a new <code>main.java.othello.OthelloPosition</code>, identical to the current one.
      */
     protected OthelloPosition clone() {
         OthelloPosition newPosition = new OthelloPosition();

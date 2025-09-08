@@ -1,7 +1,8 @@
+package main.java.othello;
 
 /**
  * This is where you implement the alpha-beta algorithm.
- * See <code>OthelloAlgorithm</code> for details
+ * See <code>main.java.othello.OthelloAlgorithm</code> for details
  * 
  * @author Henrik Bj&ouml;rklund
  *
@@ -36,5 +37,8 @@ public class AlphaBeta implements OthelloAlgorithm {
 
 	public OthelloAction evaluate(OthelloPosition pos) {
 		// TODO: implement the alpha-beta algorithm
+
+		// TODO: remove this
+		return new OthelloAction(1,2);
 	}
 }

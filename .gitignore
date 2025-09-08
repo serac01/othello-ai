@@ -1,0 +1,19 @@
+# IntelliJ project files
+.idea/
+*.iml
+
+# Compiled output
+out/
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Backup / temp
+*.class
+*.tmp
+*.swp
+*.bak

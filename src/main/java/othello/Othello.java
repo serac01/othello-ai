@@ -1,7 +1,8 @@
+package main.java.othello;
 
 public class Othello{
 /** 
- * Main entry point for the Othello game search.
+ * main.java.othello.Main entry point for the main.java.othello.Othello game search.
  *
  * Current behavior:
  *   - Uses Alpha-Beta pruning with a fixed search depth.
@@ -12,7 +13,7 @@ public class Othello{
  *     that respects a time limit (provided as an argument).
  *
  * Usage:
- *   java Othello <position_string> <time_limit_seconds>
+ *   java main.java.othello.Othello <position_string> <time_limit_seconds>
  *
  * Args:
  *   arg0: Position string (length 65, board representation).
@@ -33,9 +34,9 @@ public class Othello{
 	}else{
 	    posString = "WEEEEEEEEEEEEEEEEEEEEEEEEEEEOXEEEEEEXOEEEEEEEEEEEEEEEEEEEEEEEEEEE";
 	}
-	//System.out.println(posString);
+	System.out.println(posString);
 	pos = new OthelloPosition(posString);
-	//pos.illustrate(); //Only for debugging. The test script has it's own print method
+	pos.illustrate(); //Only for debugging. The test script has it's own print method
 	
 	// Which evaluator (heuristics) should be used
 	algorithm = new AlphaBeta(new CountingEvaluator());

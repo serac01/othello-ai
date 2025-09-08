@@ -1,8 +1,9 @@
+package main.java.othello;
 
 /**
  * This class represents a 'move' in a game. The move is simply represented by
  * two integers: the row and the column where the player puts the marker. In
- * addition, the <code>OthelloAction</code> has a field where the estimated
+ * addition, the <code>main.java.othello.OthelloAction</code> has a field where the estimated
  * value of the move can be stored during computations.
  * 
  * @author Henrik Bj&ouml;rklund
@@ -23,7 +24,7 @@ public class OthelloAction {
     protected boolean pass = false;
 
     /**
-     * Creates a new <code>OthelloAction</code> with row <code>r</code>, column
+     * Creates a new <code>main.java.othello.OthelloAction</code> with row <code>r</code>, column
      * <code>c</code>, and value 0.
      */
     public OthelloAction(int r, int c) {
