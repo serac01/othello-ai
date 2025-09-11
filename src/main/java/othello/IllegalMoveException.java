@@ -6,10 +6,12 @@ package main.java.othello;
  */
 
 public class IllegalMoveException extends Exception {
-	private OthelloAction action;
+	private final OthelloAction action;
 
-	public IllegalMoveException(OthelloAction a) { action = a; }
-
+	public IllegalMoveException(OthelloAction a) {
+		super("Illegal move attempted: " + a.toString());
+		this.action = a;
+	}
 	public OthelloAction getAction() {
 		return action;
 	}

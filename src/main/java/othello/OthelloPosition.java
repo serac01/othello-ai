@@ -189,9 +189,7 @@ public class OthelloPosition {
     private boolean isCandidate(int row, int column) {
         if (!isEmpty(row, column))
             return false;
-        if (hasNeighbor(row, column))
-            return true;
-        return false;
+        return hasNeighbor(row, column);
     }
     
     private boolean hasNeighbor(int row, int column) {
@@ -209,9 +207,7 @@ public class OthelloPosition {
             return true;
         if (!isEmpty(row, column - 1))
             return true;
-        if (!isEmpty(row - 1, column - 1))
-            return true;
-        return false;
+        return !isEmpty(row - 1, column - 1);
     }
     
     private boolean isEmpty(int row, int column) { return board[row][column] == 'E'; }
@@ -219,17 +215,70 @@ public class OthelloPosition {
     public boolean toMove() { return maxPlayerRound; }
 
     public OthelloPosition makeMove(OthelloAction action) throws IllegalMoveException {
+        OthelloPosition newPos = this.clone();
+        if (action.isPassMove()) {
+            newPos.maxPlayerRound = !this.maxPlayerRound;
+            return newPos;
+        }
 
-        /*
-         * TODO: write the code for this method and whatever helper functions it needs.
-         *  This needs to return the position resulting from making the move "action" in
-         *  the current position. This also changes the player to move next.
-         */
+        LinkedList<OthelloAction> legalMoves = getAllPossibleMoves();
+        boolean valid = false;
+        for (OthelloAction m : legalMoves) {
+            if (m.getRow() == action.getRow() && m.getColumn() == action.getColumn()) {
+                valid = true;
+                break;
+            }
+        }
+        if (!valid) throw new IllegalMoveException(action);
 
-        // TODO: remove, just used to compile at first
-        return null;
+        char playerDisc = newPos.maxPlayerRound ? 'W' : 'B';
+        newPos.board[action.getRow()][action.getColumn()] = playerDisc;
+
+        newPos.flipDiscs(action.getRow(), action.getColumn(), -1,  0);
+        newPos.flipDiscs(action.getRow(), action.getColumn(), -1,  1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  0,  1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  1,  1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  1,  0);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  1, -1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  0, -1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(), -1, -1);
+
+        newPos.maxPlayerRound = !this.maxPlayerRound;
+
+        return newPos;
     }
 
+    private void flipDiscs(int row, int col, int dRow, int dCol) {
+        int i = row + dRow;
+        int j = col + dCol;
+
+        char opponent = maxPlayerRound ? 'B' : 'W';
+        char self = maxPlayerRound ? 'W' : 'B';
+
+        if (board[i][j] != opponent) return;
+
+        int k = i, l = j;
+        while (board[k][l] == opponent) {
+            k += dRow;
+            l += dCol;
+        }
+
+        if (board[k][l] == self) {
+            while (!(k == row && l == col)) {
+                board[k][l] = self;
+                k -= dRow;
+                l -= dCol;
+            }
+        }
+    }
+
+    public boolean isTerminal() {
+        if (!getAllPossibleMoves().isEmpty()) return false;
+
+        OthelloPosition other = this.clone();
+        other.maxPlayerRound = !this.maxPlayerRound;
+        return other.getAllPossibleMoves().isEmpty();
+    }
     protected OthelloPosition clone() {
         OthelloPosition newPosition = new OthelloPosition();
         newPosition.maxPlayerRound = maxPlayerRound;

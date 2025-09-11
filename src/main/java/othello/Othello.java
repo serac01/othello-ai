@@ -13,11 +13,8 @@ public class Othello{
 	 * @author Henrik Björklund; serac01; josigabor
 	 */
 
-	public static void main(String [] args) {
+	public static void main(String [] args) throws IllegalMoveException {
 		String boardString;
-		OthelloPosition position;
-		OthelloAlgorithm algorithm;
-		OthelloAction move;
 
 		if(args.length > 0) {
 			boardString = args[0];
@@ -25,22 +22,119 @@ public class Othello{
 			boardString = "WEEEEEEEEEEEEEEEEEEEEEEEEEEEOXEEEEEEXOEEEEEEEEEEEEEEEEEEEEEEEEEEE";
 		}
 
-		position = new OthelloPosition(boardString);
+		OthelloPosition position = new OthelloPosition(boardString);
+		OthelloAlgorithm algorithm = new AlphaBeta(new CountingEvaluator());
 
-		// TODO: remove before submitting, it's only for debug
-		position.illustrate();
+		// firsMoveFirstOption(position);
+		alphaBeta(position,algorithm);
+
+
 
 		// Which evaluator (heuristics) should be used
-		algorithm = new AlphaBeta(new CountingEvaluator());
+		// algorithm = new AlphaBeta(new CountingEvaluator());
 
 		// TODO: replace the fixed-depth implementation with Iterative Deepening Search
 		// Set the depth that AlphaBeta will search to.
-		algorithm.setSearchDepth(7);
+		// algorithm.setSearchDepth(7);
 
 		// Evaluate the position
-		move = algorithm.evaluate(position);
+		// move = algorithm.evaluate(position);
 
 		// Send the chosen move to stdout (print it)
-		move.print();
+		// move.print();
+
     }
+
+	private static void alphaBeta(OthelloPosition position, OthelloAlgorithm algorithm) throws IllegalMoveException {
+		position.illustrate();
+		OthelloAction move;
+
+		int turn = 1;
+		while (!position.isTerminal()) {
+			// TODO: REMOVE DEBUG
+			System.out.println("Turn " + turn + " - Player " + (position.toMove() ? "W" : "B"));
+
+			if (!position.getAllPossibleMoves().isEmpty()) {
+				algorithm.setSearchDepth(7);
+				move = algorithm.evaluate(position);
+
+				try {
+					System.out.println("Available moves:");
+					for (OthelloAction action : position.getAllPossibleMoves()) {
+						action.print();
+					}
+
+					position = position.makeMove(move);
+					position.illustrate();
+				} catch (IllegalMoveException e) {
+					// TODO: REMOVE DEBUG
+					System.out.println("AI tried illegal move! This shouldn't happen.");
+					break;
+				}
+			} else {
+				System.out.println("No possible move -> PASS");
+				try {
+					position = position.makeMove(new OthelloAction(0, 0, true));
+				} catch (IllegalMoveException e) {
+					System.out.println("Error during make move");
+					break;
+				}
+			}
+
+			turn++;
+		}
+
+		position.illustrate();
+		// TODO: REMOVE DEBUG
+		System.out.println("End Game");
+	}
+
+
+	private static void firsMoveFirstOption(OthelloPosition position){
+		position.illustrate();
+		OthelloAction move;
+
+		int turn = 1;
+		while (!position.isTerminal()) {
+			// TODO: REMOVE DEBUG
+			System.out.println("Turn " + turn + " - Player " + (position.toMove() ? "W" : "B"));
+
+			if (!position.getAllPossibleMoves().isEmpty()) {
+				try {
+					// TODO: REMOVE DEBUG
+					System.out.println("Available moves:");
+					for (OthelloAction action : position.getAllPossibleMoves()) {
+						action.print();
+					}
+
+					move = position.getAllPossibleMoves().getFirst();
+					// TODO: REMOVE DEBUG
+					System.out.print("Choose: ");
+					move.print();
+
+					position = position.makeMove(move);
+					position.illustrate();
+				} catch (IllegalMoveException e) {
+					// TODO: REMOVE DEBUG
+					System.out.println("Illegal move: " + e.getAction());
+					break;
+				}
+			} else {
+				// TODO: REMOVE DEBUG
+				System.out.println("No possible move -> PASS");
+				try {
+					position = position.makeMove(new OthelloAction(0, 0, true));
+				} catch (IllegalMoveException e) {
+					// TODO: REMOVE DEBUG
+					System.out.println("Error during make move");
+					break;
+				}
+			}
+
+			turn++;
+		}
+
+		// TODO: REMOVE DEBUG
+		System.out.println("End game!");
+	}
 }
