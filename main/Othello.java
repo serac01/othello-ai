@@ -1,4 +1,3 @@
-package main.java.othello;
 
 public class Othello{
 	/**
@@ -23,11 +22,10 @@ public class Othello{
 		}
 
 		OthelloPosition position = new OthelloPosition(boardString);
-		OthelloAlgorithm algorithm = new AlphaBeta(new CountingEvaluator());
+		OthelloAlgorithm algorithm = new AlphaBeta(new CornerHeurisitcs());
 
 		// firsMoveFirstOption(position);
-		alphaBeta(position,algorithm);
-
+		//alphaBeta(position,algorithm);
 
 
 		// Which evaluator (heuristics) should be used
@@ -35,13 +33,13 @@ public class Othello{
 
 		// TODO: replace the fixed-depth implementation with Iterative Deepening Search
 		// Set the depth that AlphaBeta will search to.
-		// algorithm.setSearchDepth(7);
+		 algorithm.setSearchDepth(7);
 
 		// Evaluate the position
-		// move = algorithm.evaluate(position);
+		OthelloAction move = algorithm.evaluate(position);
 
 		// Send the chosen move to stdout (print it)
-		// move.print();
+		 move.print();
 
     }
 

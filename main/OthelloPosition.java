@@ -1,4 +1,4 @@
-package main.java.othello;
+
 
 import java.util.*;
 

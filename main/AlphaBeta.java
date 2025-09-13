@@ -1,4 +1,3 @@
-package main.java.othello;
 
 /**
  * Alpha-Beta search algorithm.

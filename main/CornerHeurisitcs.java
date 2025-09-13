@@ -1,4 +1,4 @@
-package main.java.othello;
+
 /**
  * A simple evaluator that just counts the number of black and white squares
  *

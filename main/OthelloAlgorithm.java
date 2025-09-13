@@ -1,4 +1,4 @@
-package main.java.othello;
+
 
 /**
  * This interface defines the mandatory methods for game playing algorithms,

@@ -1,4 +1,4 @@
-package main.java.othello;
+
 
 /**
  * This class represents a 'move' in a game.
