@@ -22,7 +22,7 @@ public class Othello{
 		}
 
 		OthelloPosition position = new OthelloPosition(boardString);
-		OthelloAlgorithm algorithm = new AlphaBeta(new CornerHeurisitcs());
+		OthelloAlgorithm algorithm = new AlphaBeta(new CornerHeuristics());
 
 		// firsMoveFirstOption(position);
 		//alphaBeta(position,algorithm);
@@ -33,7 +33,7 @@ public class Othello{
 
 		// TODO: replace the fixed-depth implementation with Iterative Deepening Search
 		// Set the depth that AlphaBeta will search to.
-		 algorithm.setSearchDepth(7);
+		 algorithm.setSearchDepth(9);
 
 		// Evaluate the position
 		OthelloAction move = algorithm.evaluate(position);
