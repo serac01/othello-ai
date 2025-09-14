@@ -26,7 +26,7 @@ public class CornerHeuristics implements OthelloEvaluator {
             int wc = findWhiteCorners(pos);
             int bc = findBlackCorners(pos);
             int sides = sidesWithSupportingCorner(pos);
-            return whiteSquares - blackSquares + cornerMultiplyer * (wc-bc) + sideMultiplyer * sides + moveMultiplyer * pos.getAllPossibleMoves().size();
+            return (whiteSquares - blackSquares) + cornerMultiplyer * (wc-bc) + sideMultiplyer * sides + moveMultiplyer * pos.getAllPossibleMoves().size();
         }
 
         public int findWhiteCorners(OthelloPosition pos) {

@@ -37,9 +37,18 @@ public class AlphaBeta implements OthelloAlgorithm {
 		int alpha = Integer.MIN_VALUE;
 		int beta = Integer.MAX_VALUE;
 		OthelloAction bestValue = null;
-
+		OthelloPosition newPos = null;
 		for (OthelloAction value : pos.getAllPossibleMoves()) {
-			OthelloPosition newPos = pos.makeMove(value);
+			if(value == null) {
+				return new OthelloAction("pass");
+			}
+			try{
+				newPos = pos.makeMove(value);
+			}catch(IllegalMoveException e){
+				value.pass = true;
+				continue;
+			}
+
 			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, true);
 			if (score > alpha) {
 				alpha = score;
