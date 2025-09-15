@@ -10,7 +10,8 @@ public class Othello{
 	 *
 	 * @author Henrik Björklund; serac01; josigabor
 	 */
-	public static void main(String [] args) throws IllegalMoveException {
+	public static void main(String [] args) throws IllegalMoveException, TimeUpException {
+		long startTime = System.currentTimeMillis();
 		if (args.length < 2) {
 			System.err.println("Too few arguments.\nUsage: othello <position_string> <time_limit_seconds>");
 			return;
@@ -38,29 +39,24 @@ public class Othello{
 		OthelloPosition position = new OthelloPosition(boardString);
 		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator());
 
-		// ---------------------------------------------------------------------
-		// TODO: replace the fixed-depth implementation with Iterative Deepening Search
-		// ---------------------------------------------------------------------
-		// Set the depth that AlphaBeta will search to.
-		//algorithm.setSearchDepth(7);
-
-		// Evaluate the position
-		//OthelloAction move = algorithm.evaluate(position);
-
 		int depth = 1;
-		OthelloAction move = null;
+		OthelloAction move;
 		OthelloAction bestMove = null;
-		long startTime = System.currentTimeMillis();
-		long endTime = startTime + timeLimit * 1000;
 
-		while (System.currentTimeMillis() < endTime) {
-			algorithm.setSearchDepth(depth);
-			move = algorithm.evaluate(position);
-			if (move != null) bestMove = move;
-			depth++;
+		try {
+			long endTime = startTime + timeLimit * 1000L;
+			while (System.currentTimeMillis() < endTime) {
+				algorithm.setSearchDepth(depth);
+				move = algorithm.evaluate(position, endTime);
+				if (move != null) bestMove = move;
+				depth++;
+			}
+		} catch(TimeUpException e) {
+			// TODO
 		}
 
-		// Send the chosen move to stdout (print it)
+		if(bestMove == null)  bestMove = new OthelloAction("pass");
+
 		bestMove.print();
 	}
 }

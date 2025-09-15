@@ -5,7 +5,8 @@ public class CornerSideEvaluator implements OthelloEvaluator {
     private int pieceMultiplier = 1;
 
     @Override
-    public int evaluate(OthelloPosition pos) {
+    public int evaluate(OthelloPosition pos, long endTime) throws TimeUpException {
+        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
         int white = 0, black = 0;
 
         for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
@@ -34,7 +35,7 @@ public class CornerSideEvaluator implements OthelloEvaluator {
             }
         }
 
-        if(pos.isTerminal()) return (white - black) * 100000;
+        if(pos.isTerminal(endTime)) return (white - black) * 100000;
 
         return (white - black) * pieceMultiplier
                 + (whiteCorners - blackCorners) * cornerMultiplier

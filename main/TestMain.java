@@ -1,6 +1,6 @@
 
 public class TestMain{
-    public static void main(String [] args) throws IllegalMoveException {
+    public static void main(String [] args) throws IllegalMoveException, TimeUpException {
         String boardString;
 
         if(args.length > 0) {
@@ -13,7 +13,7 @@ public class TestMain{
         OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator());
 
         // firsMoveFirstOption(position);
-        alphaBeta(position,algorithm);
+        alphaBeta(position,algorithm, Long.MAX_VALUE);
 
 
         // Which evaluator (heuristics) should be used
@@ -33,27 +33,27 @@ public class TestMain{
 
     }
 
-    private static void alphaBeta(OthelloPosition position, OthelloAlgorithm algorithm) throws IllegalMoveException {
+    private static void alphaBeta(OthelloPosition position, OthelloAlgorithm algorithm, long endTime) throws IllegalMoveException, TimeUpException {
         position.illustrate();
         OthelloAction move;
 
         int turn = 1;
-        while (!position.isTerminal()) {
+        while (!position.isTerminal(endTime)) {
             // TODO: REMOVE DEBUG
             System.out.println("Turn " + turn + " - Player " + (position.toMove() ? "W" : "B"));
 
-            if (!position.getAllPossibleMoves().isEmpty()) {
+            if (!position.getAllPossibleMoves(endTime).isEmpty()) {
                 algorithm.setSearchDepth(7);
-                move = algorithm.evaluate(position);
+                move = algorithm.evaluate(position, endTime);
 
                 try {
                     System.out.println("Available moves:");
-                    for (OthelloAction action : position.getAllPossibleMoves()) {
+                    for (OthelloAction action : position.getAllPossibleMoves(endTime)) {
                         action.print();
                     }
 
                     // TODO: move can be null at this point?????
-                    position = position.makeMove(move);
+                    position = position.makeMove(move, endTime);
                     position.illustrate();
                 } catch (IllegalMoveException e) {
                     // TODO: REMOVE DEBUG
@@ -63,7 +63,7 @@ public class TestMain{
             } else {
                 System.out.println("No possible move -> PASS");
                 try {
-                    position = position.makeMove(new OthelloAction(0, 0, true));
+                    position = position.makeMove(new OthelloAction(0, 0, true), endTime);
                 } catch (IllegalMoveException e) {
                     System.out.println("Error during make move");
                     break;
@@ -76,29 +76,29 @@ public class TestMain{
     }
 
 
-    private static void firsMoveFirstOption(OthelloPosition position){
+    private static void firsMoveFirstOption(OthelloPosition position, long endTime) throws TimeUpException {
         position.illustrate();
         OthelloAction move;
 
         int turn = 1;
-        while (!position.isTerminal()) {
+        while (!position.isTerminal(endTime)) {
             // TODO: REMOVE DEBUG
             System.out.println("Turn " + turn + " - Player " + (position.toMove() ? "W" : "B"));
 
-            if (!position.getAllPossibleMoves().isEmpty()) {
+            if (!position.getAllPossibleMoves(endTime).isEmpty()) {
                 try {
                     // TODO: REMOVE DEBUG
                     System.out.println("Available moves:");
-                    for (OthelloAction action : position.getAllPossibleMoves()) {
+                    for (OthelloAction action : position.getAllPossibleMoves(endTime)) {
                         action.print();
                     }
 
-                    move = position.getAllPossibleMoves().getFirst();
+                    move = position.getAllPossibleMoves(endTime).getFirst();
                     // TODO: REMOVE DEBUG
                     System.out.print("Choose: ");
                     move.print();
 
-                    position = position.makeMove(move);
+                    position = position.makeMove(move, endTime);
                     position.illustrate();
                 } catch (IllegalMoveException e) {
                     // TODO: REMOVE DEBUG
@@ -109,7 +109,7 @@ public class TestMain{
                 // TODO: REMOVE DEBUG
                 System.out.println("No possible move -> PASS");
                 try {
-                    position = position.makeMove(new OthelloAction(0, 0, true));
+                    position = position.makeMove(new OthelloAction(0, 0, true), endTime);
                 } catch (IllegalMoveException e) {
                     // TODO: REMOVE DEBUG
                     System.out.println("Error during make move");
