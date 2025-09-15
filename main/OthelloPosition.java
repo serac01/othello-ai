@@ -49,7 +49,7 @@ public class OthelloPosition {
         board[BOARD_SIZE / 2][BOARD_SIZE / 2 + 1] = board[BOARD_SIZE / 2 + 1][BOARD_SIZE / 2] = 'B';
         maxPlayerRound = true;
     }
-    
+
     public LinkedList<OthelloAction> getAllPossibleMoves() {
         boolean[][] candidates = new boolean[BOARD_SIZE][BOARD_SIZE];
         LinkedList<OthelloAction> moves = new LinkedList<OthelloAction>();
@@ -279,6 +279,7 @@ public class OthelloPosition {
         other.maxPlayerRound = !this.maxPlayerRound;
         return other.getAllPossibleMoves().isEmpty();
     }
+
     protected OthelloPosition clone() {
         OthelloPosition newPosition = new OthelloPosition();
         newPosition.maxPlayerRound = maxPlayerRound;
