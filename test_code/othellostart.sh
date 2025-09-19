@@ -114,4 +114,5 @@ echo "$winner won with $whitecount points"
 echo "Average time for white: $whiteTmean s (max: $whiteTmax s)"
 echo "Average time for black: $blackTmean s (max: $blackTmax s)" 
 echo "***************************************"
+read -p "Press Enter to end the game..."
 

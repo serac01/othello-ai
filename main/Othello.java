@@ -44,7 +44,7 @@ public class Othello{
 		OthelloAction bestMove = null;
 
 		try {
-			long endTime = startTime + timeLimit * 1000L;
+			long endTime = startTime + timeLimit * 1000L - 300L;
 			while (System.currentTimeMillis() < endTime) {
 				algorithm.setSearchDepth(depth);
 				move = algorithm.evaluate(position, endTime);
