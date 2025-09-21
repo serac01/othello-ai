@@ -51,24 +51,12 @@ public class OthelloPosition {
     }
 
     public LinkedList<OthelloAction> getAllPossibleMoves() throws TimeUpException {
-        boolean[][] candidates = new boolean[BOARD_SIZE][BOARD_SIZE];
-        LinkedList<OthelloAction> moves = new LinkedList<OthelloAction>();
+        LinkedList<OthelloAction> moves = new LinkedList<>();
         for (int i = 0; i < BOARD_SIZE; i++)
             for (int j = 0; j < BOARD_SIZE; j++) {
-                if (Thread.interrupted()) {
-                    throw new TimeUpException();
-                }
-                candidates[i][j] = isCandidate(i + 1, j + 1);
-            }
-        for (int i = 0; i < BOARD_SIZE; i++)
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                if (candidates[i][j])
-                    if (isPossibleToMove(i + 1, j + 1))
-                        moves.add(new OthelloAction(i + 1, j + 1));
-
-                if (Thread.interrupted()) {
-                    throw new TimeUpException();
-                }
+                if (Thread.interrupted()) throw new TimeUpException();
+                if (isCandidate(i + 1, j + 1) && isPossibleToMove(i + 1, j + 1))
+                    moves.add(new OthelloAction(i + 1, j + 1));
             }
         return moves;
     }
@@ -87,9 +75,7 @@ public class OthelloPosition {
     private boolean checkNorth(int row, int column) throws TimeUpException {
         if (!isOpponentSquare(row - 1, column)) return false;
         for (int i = row - 2; i > 0; i--) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(i, column))
                 return false;
             if (isOwnSquare(i, column))
@@ -102,9 +88,7 @@ public class OthelloPosition {
         if (!isOpponentSquare(row, column + 1))
             return false;
         for (int i = column + 2; i <= BOARD_SIZE; i++) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(row, i))
                 return false;
             if (isOwnSquare(row, i))
@@ -117,9 +101,7 @@ public class OthelloPosition {
         if (!isOpponentSquare(row + 1, column))
             return false;
         for (int i = row + 2; i <= BOARD_SIZE; i++) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(i, column))
                 return false;
             if (isOwnSquare(i, column))
@@ -132,12 +114,7 @@ public class OthelloPosition {
         if (!isOpponentSquare(row, column - 1))
             return false;
         for (int i = column - 2; i > 0; i--) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(row, i))
                 return false;
             if (isOwnSquare(row, i))
@@ -150,9 +127,7 @@ public class OthelloPosition {
         if (!isOpponentSquare(row - 1, column + 1))
             return false;
         for (int i = 2; row - i > 0 && column + i <= BOARD_SIZE; i++) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(row - i, column + i))
                 return false;
             if (isOwnSquare(row - i, column + i))
@@ -165,9 +140,7 @@ public class OthelloPosition {
         if (!isOpponentSquare(row + 1, column + 1))
             return false;
         for (int i = 2; row + i <= BOARD_SIZE && column + i <= BOARD_SIZE; i++) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(row + i, column + i))
                 return false;
             if (isOwnSquare(row + i, column + i))
@@ -180,9 +153,7 @@ public class OthelloPosition {
         if (!isOpponentSquare(row + 1, column - 1))
             return false;
         for (int i = 2; row + i <= BOARD_SIZE && column - i > 0; i++) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(row + i, column - i))
                 return false;
             if (isOwnSquare(row + i, column - i))
@@ -195,9 +166,7 @@ public class OthelloPosition {
         if (!isOpponentSquare(row - 1, column - 1))
             return false;
         for (int i = 2; row - i > 0 && column - i > 0; i++) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
+            if (Thread.interrupted()) throw new TimeUpException();
             if (isEmpty(row - i, column - i))
                 return false;
             if (isOwnSquare(row - i, column - i))
@@ -251,10 +220,8 @@ public class OthelloPosition {
     public boolean toMove() { return maxPlayerRound; }
 
     public OthelloPosition makeMove(OthelloAction action) throws IllegalMoveException, TimeUpException {
-        if (Thread.interrupted()) {
-            throw new TimeUpException();
-        }
-        OthelloPosition newPos = this.clone();
+        if (Thread.interrupted()) throw new TimeUpException();
+        OthelloPosition newPos = this.clonePos();
         if (action.isPassMove()) {
             newPos.maxPlayerRound = !this.maxPlayerRound;
             return newPos;
@@ -304,23 +271,17 @@ public class OthelloPosition {
     public boolean isTerminal() throws TimeUpException {
         if (!getAllPossibleMoves().isEmpty()) return false;
 
-        OthelloPosition other = this.clone();
+        OthelloPosition other = this.clonePos();
         other.maxPlayerRound = !this.maxPlayerRound;
         return other.getAllPossibleMoves().isEmpty();
     }
 
-    protected OthelloPosition clone() {
+    private OthelloPosition clonePos() throws TimeUpException {
         OthelloPosition newPosition = new OthelloPosition();
         newPosition.maxPlayerRound = maxPlayerRound;
         for (int i = 0; i < BOARD_SIZE + 2; i++)
             for (int j = 0; j < BOARD_SIZE + 2; j++) {
-                if (Thread.interrupted()) {
-                    try {
-                        throw new TimeUpException();
-                    } catch (TimeUpException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                if (Thread.interrupted()) throw new TimeUpException();
                 newPosition.board[i][j] = board[i][j];
             }
         return newPosition;
