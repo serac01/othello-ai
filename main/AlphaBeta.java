@@ -38,29 +38,21 @@ public class AlphaBeta implements OthelloAlgorithm {
 		int alpha = Integer.MIN_VALUE;
 		int beta = Integer.MAX_VALUE;
 		OthelloAction bestValue = null;
-		OthelloPosition newPos = null;
-		for (OthelloAction value : orderMoves(pos.getAllPossibleMoves())) {
-			if (Thread.interrupted()) {
-				throw new TimeUpException();
-			}
+		LinkedList<OthelloAction> moves = orderMoves(pos.getAllPossibleMoves());
 
-			if(value == null) {
-				return new OthelloAction("pass");
-			}
-			try{
-				newPos = pos.makeMove(value);
-			}catch(IllegalMoveException e){
-				value.pass = true;
-				continue;
-			}
+		if (moves.isEmpty()) return new OthelloAction("pass");
 
-			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, true);
+		for (OthelloAction move : moves) {
+			if (Thread.interrupted()) throw new TimeUpException();
+
+			OthelloPosition newPos = pos.makeMove(move);
+			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, newPos.toMove());
+
 			if (score > alpha) {
 				alpha = score;
-				bestValue = value;
+				bestValue = move;
 			}
 		}
-
 		return bestValue;
 	}
 
