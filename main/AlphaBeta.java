@@ -47,7 +47,7 @@ public class AlphaBeta implements OthelloAlgorithm {
 			if (Thread.interrupted()) throw new TimeUpException();
 
 			OthelloPosition newPos = pos.makeMove(move);
-			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, true);
+			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, newPos.toMove());
 
 			if (score > alpha) {
 				alpha = score;
