@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 
 /**
  * Alpha-Beta search algorithm.
@@ -37,29 +38,22 @@ public class AlphaBeta implements OthelloAlgorithm {
 		int alpha = Integer.MIN_VALUE;
 		int beta = Integer.MAX_VALUE;
 		OthelloAction bestValue = null;
-		OthelloPosition newPos = null;
-		for (OthelloAction value : pos.getAllPossibleMoves()) {
-			if (Thread.interrupted()) {
-				throw new TimeUpException();
-			}
 
-			if(value == null) {
-				return new OthelloAction("pass");
-			}
-			try{
-				newPos = pos.makeMove(value);
-			}catch(IllegalMoveException e){
-				value.pass = true;
-				continue;
-			}
+		LinkedList<OthelloAction> moves = pos.getAllPossibleMoves();
 
+		if (moves.isEmpty()) return new OthelloAction("pass");
+
+		for (OthelloAction move : moves) {
+			if (Thread.interrupted()) throw new TimeUpException();
+
+			OthelloPosition newPos = pos.makeMove(move);
 			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, true);
+
 			if (score > alpha) {
 				alpha = score;
-				bestValue = value;
+				bestValue = move;
 			}
 		}
-
 		return bestValue;
 	}
 
