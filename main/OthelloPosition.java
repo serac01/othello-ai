@@ -260,22 +260,6 @@ public class OthelloPosition {
             return newPos;
         }
 
-        LinkedList<OthelloAction> legalMoves = getAllPossibleMoves();
-        boolean valid = false;
-        for (OthelloAction m : legalMoves) {
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
-            if (Thread.interrupted()) {
-                throw new TimeUpException();
-            }
-            if (m.getRow() == action.getRow() && m.getColumn() == action.getColumn()) {
-                valid = true;
-                break;
-            }
-        }
-        if (!valid) throw new IllegalMoveException(action);
-
         char playerDisc = newPos.maxPlayerRound ? 'W' : 'B';
         newPos.board[action.getRow()][action.getColumn()] = playerDisc;
 
