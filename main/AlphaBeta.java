@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 
 /**
  * Alpha-Beta search algorithm.
@@ -38,7 +39,7 @@ public class AlphaBeta implements OthelloAlgorithm {
 		int beta = Integer.MAX_VALUE;
 		OthelloAction bestValue = null;
 		OthelloPosition newPos = null;
-		for (OthelloAction value : pos.getAllPossibleMoves()) {
+		for (OthelloAction value : orderMoves(pos.getAllPossibleMoves())) {
 			if (Thread.interrupted()) {
 				throw new TimeUpException();
 			}
@@ -107,4 +108,31 @@ public class AlphaBeta implements OthelloAlgorithm {
 		}
 		return value;
 	}
+
+	private LinkedList<OthelloAction> orderMoves(LinkedList<OthelloAction> moves) {
+		LinkedList<OthelloAction> corners = new LinkedList<>();
+		LinkedList<OthelloAction> edges = new LinkedList<>();
+		LinkedList<OthelloAction> others = new LinkedList<>();
+
+		for (OthelloAction move : moves) {
+			int r = move.getRow();
+			int c = move.getColumn();
+
+			if ((r == 1 || r == OthelloPosition.BOARD_SIZE) && (c == 1 || c == OthelloPosition.BOARD_SIZE)) {
+				corners.add(move);
+			} else if (r == 1 || r == OthelloPosition.BOARD_SIZE || c == 1 || c == OthelloPosition.BOARD_SIZE) {
+				edges.add(move);
+			} else {
+				others.add(move);
+			}
+		}
+
+		LinkedList<OthelloAction> ordered = new LinkedList<>();
+		ordered.addAll(corners);
+		ordered.addAll(edges);
+		ordered.addAll(others);
+
+		return ordered;
+	}
+
 }
