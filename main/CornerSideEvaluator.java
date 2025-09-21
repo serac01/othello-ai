@@ -3,11 +3,12 @@ public class CornerSideEvaluator implements OthelloEvaluator {
     private int cornerMultiplier = 1000;
     private int sideMultiplier = 10;
     private int pieceMultiplier = 1;
+    private int moveMultiplier = 1;
 
     @Override
     public int evaluate(OthelloPosition pos) throws TimeUpException {
         int white = 0, black = 0;
-
+        int moveCount =  pos.getAllPossibleMoves(endTime).size();
         for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
             for (int j = 1; j <= OthelloPosition.BOARD_SIZE; j++) {
                 if (Thread.interrupted()) {
@@ -18,7 +19,7 @@ public class CornerSideEvaluator implements OthelloEvaluator {
                 else if (c == 'B') black++;
             }
         }
-
+        if(moveCount == 0) return (white) * 100000;
         int[][] corners = {{1,1},{1,8},{8,1},{8,8}};
         int whiteCorners = 0, blackCorners = 0;
         for (int[] c : corners) {
@@ -42,11 +43,30 @@ public class CornerSideEvaluator implements OthelloEvaluator {
                 else if (pos.board[i][j]=='B') blackSides++;
             }
         }
+        int[][] subCorners = {{1,2},{2,1},{1,7},{2,8},{7,1},{8,2},{7,8},{8,7}};
+        int whiteSubCorners = 0, blackSubCorners = 0;
+//        for (int[] c : subCorners) {
+//            if (pos.board[c[0]][c[1]] == 'W') whiteSubCorners++;
+//            else if (pos.board[c[0]][c[1]] == 'B') blackSubCorners++;
+//        }
+//        int subCornerMultiplyer = white+black > 30 ? 10 : -1;
+        int subCornerMultiplyer = 0;
 
         if(pos.isTerminal()) return (white - black) * 100000;
 
         return (white - black) * pieceMultiplier
                 + (whiteCorners - blackCorners) * cornerMultiplier
-                + (whiteSides - blackSides) * sideMultiplier;
+                + (whiteSides - blackSides) * sideMultiplier
+                + (whiteSubCorners - blackSubCorners) * subCornerMultiplyer
+                + (moveCount * moveMultiplier);
     }
 }
+/* Heuristics optimalisation on 2 secs
+Corner | Side | Piece Multiplyer
+1000 10 1 : 14 to black / 40 to black / 40 to black / 60 to black / 60 to black / 46 to black
+
+
+
+
+
+ */
