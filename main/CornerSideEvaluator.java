@@ -8,7 +8,7 @@ public class CornerSideEvaluator implements OthelloEvaluator {
     @Override
     public int evaluate(OthelloPosition pos) throws TimeUpException {
         int white = 0, black = 0;
-        int moveCount =  pos.getAllPossibleMoves(endTime).size();
+        int moveCount = pos.getAllPossibleMoves().size();
         for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
             for (int j = 1; j <= OthelloPosition.BOARD_SIZE; j++) {
                 if (Thread.interrupted()) {
@@ -43,30 +43,12 @@ public class CornerSideEvaluator implements OthelloEvaluator {
                 else if (pos.board[i][j]=='B') blackSides++;
             }
         }
-        int[][] subCorners = {{1,2},{2,1},{1,7},{2,8},{7,1},{8,2},{7,8},{8,7}};
-        int whiteSubCorners = 0, blackSubCorners = 0;
-//        for (int[] c : subCorners) {
-//            if (pos.board[c[0]][c[1]] == 'W') whiteSubCorners++;
-//            else if (pos.board[c[0]][c[1]] == 'B') blackSubCorners++;
-//        }
-//        int subCornerMultiplyer = white+black > 30 ? 10 : -1;
-        int subCornerMultiplyer = 0;
 
         if(pos.isTerminal()) return (white - black) * 100000;
 
         return (white - black) * pieceMultiplier
                 + (whiteCorners - blackCorners) * cornerMultiplier
                 + (whiteSides - blackSides) * sideMultiplier
-                + (whiteSubCorners - blackSubCorners) * subCornerMultiplyer
                 + (moveCount * moveMultiplier);
     }
 }
-/* Heuristics optimalisation on 2 secs
-Corner | Side | Piece Multiplyer
-1000 10 1 : 14 to black / 40 to black / 40 to black / 60 to black / 60 to black / 46 to black
-
-
-
-
-
- */
