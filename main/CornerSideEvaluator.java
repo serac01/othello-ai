@@ -38,8 +38,30 @@ public class CornerSideEvaluator implements OthelloEvaluator {
             }
         }
 
+        int whiteDanger = 0, blackDanger = 0;
+        int[][] dangerSquares = {
+                {1,2},{2,1},{2,2},
+                {1,7},{2,8},{2,7},
+                {7,1},{8,2},{7,2},
+                {8,7},{7,8},{7,7}
+        };
+        for (int[] s : dangerSquares) {
+            if (Thread.interrupted()) throw new TimeUpException();
+            char square = pos.board[s[0]][s[1]];
+            boolean adjacentCornerEmpty = false;
+            if (s[0]<=2 && s[1]<=2) adjacentCornerEmpty = pos.board[1][1]=='E';
+            if (s[0]<=2 && s[1]>=7) adjacentCornerEmpty = adjacentCornerEmpty || pos.board[1][8]=='E';
+            if (s[0]>=7 && s[1]<=2) adjacentCornerEmpty = adjacentCornerEmpty || pos.board[8][1]=='E';
+            if (s[0]>=7 && s[1]>=7) adjacentCornerEmpty = adjacentCornerEmpty || pos.board[8][8]=='E';
+
+            if (!adjacentCornerEmpty) continue;
+            if (square == 'W') whiteDanger++;
+            else if (square == 'B') blackDanger++;
+        }
+
         return (white - black) * pieceMultiplier
                 + (whiteCorners - blackCorners) * cornerMultiplier
-                + (whiteSides - blackSides) * sideMultiplier;
+                + (whiteSides - blackSides) * sideMultiplier
+                + (whiteDanger - blackDanger) * -10;
     }
 }
