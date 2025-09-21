@@ -7,8 +7,7 @@
  */
 public class CountingEvaluator implements OthelloEvaluator {
 
-	public int evaluate(OthelloPosition pos, long endTime) throws TimeUpException {
-		if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+	public int evaluate(OthelloPosition pos) {
         int blackSquares = 0;
 		int whiteSquares = 0;
 		for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {

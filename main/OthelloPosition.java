@@ -50,138 +50,163 @@ public class OthelloPosition {
         maxPlayerRound = true;
     }
 
-    public LinkedList<OthelloAction> getAllPossibleMoves(long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+    public LinkedList<OthelloAction> getAllPossibleMoves() throws TimeUpException {
         boolean[][] candidates = new boolean[BOARD_SIZE][BOARD_SIZE];
         LinkedList<OthelloAction> moves = new LinkedList<OthelloAction>();
         for (int i = 0; i < BOARD_SIZE; i++)
-            for (int j = 0; j < BOARD_SIZE; j++)
-                candidates[i][j] = isCandidate(i + 1, j + 1, endTime);
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (Thread.interrupted()) {
+                    throw new TimeUpException();
+                }
+                candidates[i][j] = isCandidate(i + 1, j + 1);
+            }
         for (int i = 0; i < BOARD_SIZE; i++)
-            for (int j = 0; j < BOARD_SIZE; j++)
+            for (int j = 0; j < BOARD_SIZE; j++) {
                 if (candidates[i][j])
-                    if (isPossibleToMove(i + 1, j + 1, endTime))
+                    if (isPossibleToMove(i + 1, j + 1))
                         moves.add(new OthelloAction(i + 1, j + 1));
+
+                if (Thread.interrupted()) {
+                    throw new TimeUpException();
+                }
+            }
         return moves;
     }
 
-    private boolean isPossibleToMove(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        return checkNorth(row, column, endTime) ||
-                checkNorthEast(row, column, endTime) ||
-                checkEast(row, column, endTime) ||
-                checkSouthEast(row, column, endTime) ||
-                checkSouth(row, column, endTime) ||
-                checkSouthWest(row, column, endTime) ||
-                checkWest(row, column, endTime) ||
-                checkNorthWest(row, column, endTime);
+    private boolean isPossibleToMove(int row, int column) throws TimeUpException {
+        return checkNorth(row, column) ||
+                checkNorthEast(row, column) ||
+                checkEast(row, column) ||
+                checkSouthEast(row, column) ||
+                checkSouth(row, column) ||
+                checkSouthWest(row, column) ||
+                checkWest(row, column) ||
+                checkNorthWest(row, column);
     }
 
-    private boolean checkNorth(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row - 1, column, endTime)) return false;
+    private boolean checkNorth(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row - 1, column)) return false;
         for (int i = row - 2; i > 0; i--) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(i, column))
                 return false;
-            if (isOwnSquare(i, column, endTime))
+            if (isOwnSquare(i, column))
                 return true;
         }
         return false;
     }
 
-    private boolean checkEast(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row, column + 1, endTime))
+    private boolean checkEast(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row, column + 1))
             return false;
         for (int i = column + 2; i <= BOARD_SIZE; i++) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(row, i))
                 return false;
-            if (isOwnSquare(row, i, endTime))
+            if (isOwnSquare(row, i))
                 return true;
         }
         return false;
     }
 
-    private boolean checkSouth(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row + 1, column, endTime))
+    private boolean checkSouth(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row + 1, column))
             return false;
         for (int i = row + 2; i <= BOARD_SIZE; i++) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(i, column))
                 return false;
-            if (isOwnSquare(i, column, endTime))
+            if (isOwnSquare(i, column))
                 return true;
         }
         return false;
     }
 
-    private boolean checkWest(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row, column - 1, endTime))
+    private boolean checkWest(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row, column - 1))
             return false;
         for (int i = column - 2; i > 0; i--) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(row, i))
                 return false;
-            if (isOwnSquare(row, i, endTime))
+            if (isOwnSquare(row, i))
                 return true;
         }
         return false;
     }
 
-    private boolean checkNorthEast(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row - 1, column + 1, endTime))
+    private boolean checkNorthEast(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row - 1, column + 1))
             return false;
         for (int i = 2; row - i > 0 && column + i <= BOARD_SIZE; i++) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(row - i, column + i))
                 return false;
-            if (isOwnSquare(row - i, column + i, endTime))
+            if (isOwnSquare(row - i, column + i))
                 return true;
         }
         return false;
     }
 
-    private boolean checkSouthEast(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row + 1, column + 1, endTime))
+    private boolean checkSouthEast(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row + 1, column + 1))
             return false;
         for (int i = 2; row + i <= BOARD_SIZE && column + i <= BOARD_SIZE; i++) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(row + i, column + i))
                 return false;
-            if (isOwnSquare(row + i, column + i, endTime))
+            if (isOwnSquare(row + i, column + i))
                 return true;
         }
         return false;
     }
 
-    private boolean checkSouthWest(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row + 1, column - 1, endTime))
+    private boolean checkSouthWest(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row + 1, column - 1))
             return false;
         for (int i = 2; row + i <= BOARD_SIZE && column - i > 0; i++) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(row + i, column - i))
                 return false;
-            if (isOwnSquare(row + i, column - i, endTime))
+            if (isOwnSquare(row + i, column - i))
                 return true;
         }
         return false;
     }
 
-    private boolean checkNorthWest(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!isOpponentSquare(row - 1, column - 1, endTime))
+    private boolean checkNorthWest(int row, int column) throws TimeUpException {
+        if (!isOpponentSquare(row - 1, column - 1))
             return false;
         for (int i = 2; row - i > 0 && column - i > 0; i++) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (isEmpty(row - i, column - i))
                 return false;
-            if (isOwnSquare(row - i, column - i, endTime))
+            if (isOwnSquare(row - i, column - i))
                 return true;
         }
         return false;
     }
 
-    private boolean isOpponentSquare(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+    private boolean isOpponentSquare(int row, int column) {
         if (maxPlayerRound && (board[row][column] == 'B'))
             return true;
         if (!maxPlayerRound && (board[row][column] == 'W'))
@@ -189,8 +214,7 @@ public class OthelloPosition {
         return false;
     }
 
-    private boolean isOwnSquare(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+    private boolean isOwnSquare(int row, int column) {
         if (!maxPlayerRound && (board[row][column] == 'B'))
             return true;
         if (maxPlayerRound && (board[row][column] == 'W'))
@@ -198,15 +222,13 @@ public class OthelloPosition {
         return false;
     }
     
-    private boolean isCandidate(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+    private boolean isCandidate(int row, int column) {
         if (!isEmpty(row, column))
             return false;
-        return hasNeighbor(row, column, endTime);
+        return hasNeighbor(row, column);
     }
     
-    private boolean hasNeighbor(int row, int column, long endTime) throws  TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+    private boolean hasNeighbor(int row, int column) {
         if (!isEmpty(row - 1, column))
             return true;
         if (!isEmpty(row - 1, column + 1))
@@ -228,17 +250,25 @@ public class OthelloPosition {
 
     public boolean toMove() { return maxPlayerRound; }
 
-    public OthelloPosition makeMove(OthelloAction action, long endTime)  throws  IllegalMoveException, TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        OthelloPosition newPos = this.clone(endTime);
+    public OthelloPosition makeMove(OthelloAction action) throws IllegalMoveException, TimeUpException {
+        if (Thread.interrupted()) {
+            throw new TimeUpException();
+        }
+        OthelloPosition newPos = this.clone();
         if (action.isPassMove()) {
             newPos.maxPlayerRound = !this.maxPlayerRound;
             return newPos;
         }
 
-        LinkedList<OthelloAction> legalMoves = getAllPossibleMoves(endTime);
+        LinkedList<OthelloAction> legalMoves = getAllPossibleMoves();
         boolean valid = false;
         for (OthelloAction m : legalMoves) {
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
+            if (Thread.interrupted()) {
+                throw new TimeUpException();
+            }
             if (m.getRow() == action.getRow() && m.getColumn() == action.getColumn()) {
                 valid = true;
                 break;
@@ -249,22 +279,21 @@ public class OthelloPosition {
         char playerDisc = newPos.maxPlayerRound ? 'W' : 'B';
         newPos.board[action.getRow()][action.getColumn()] = playerDisc;
 
-        newPos.flipDiscs(action.getRow(), action.getColumn(), -1,  0, endTime);
-        newPos.flipDiscs(action.getRow(), action.getColumn(), -1,  1, endTime);
-        newPos.flipDiscs(action.getRow(), action.getColumn(),  0,  1, endTime);
-        newPos.flipDiscs(action.getRow(), action.getColumn(),  1,  1, endTime);
-        newPos.flipDiscs(action.getRow(), action.getColumn(),  1,  0, endTime);
-        newPos.flipDiscs(action.getRow(), action.getColumn(),  1, -1, endTime);
-        newPos.flipDiscs(action.getRow(), action.getColumn(),  0, -1, endTime);
-        newPos.flipDiscs(action.getRow(), action.getColumn(), -1, -1, endTime);
+        newPos.flipDiscs(action.getRow(), action.getColumn(), -1,  0);
+        newPos.flipDiscs(action.getRow(), action.getColumn(), -1,  1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  0,  1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  1,  1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  1,  0);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  1, -1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(),  0, -1);
+        newPos.flipDiscs(action.getRow(), action.getColumn(), -1, -1);
 
         newPos.maxPlayerRound = !this.maxPlayerRound;
 
         return newPos;
     }
 
-    private void flipDiscs(int row, int col, int dRow, int dCol, long endTime)  throws TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+    private void flipDiscs(int row, int col, int dRow, int dCol) {
         int i = row + dRow;
         int j = col + dCol;
 
@@ -288,22 +317,28 @@ public class OthelloPosition {
         }
     }
 
-    public boolean isTerminal(long endTime)  throws TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
-        if (!getAllPossibleMoves(endTime).isEmpty()) return false;
+    public boolean isTerminal() throws TimeUpException {
+        if (!getAllPossibleMoves().isEmpty()) return false;
 
-        OthelloPosition other = this.clone(endTime);
+        OthelloPosition other = this.clone();
         other.maxPlayerRound = !this.maxPlayerRound;
-        return other.getAllPossibleMoves(endTime).isEmpty();
+        return other.getAllPossibleMoves().isEmpty();
     }
 
-    protected OthelloPosition clone(long endTime)  throws TimeUpException {
-        if(System.currentTimeMillis() >= endTime) throw new TimeUpException();
+    protected OthelloPosition clone() {
         OthelloPosition newPosition = new OthelloPosition();
         newPosition.maxPlayerRound = maxPlayerRound;
         for (int i = 0; i < BOARD_SIZE + 2; i++)
-            for (int j = 0; j < BOARD_SIZE + 2; j++)
+            for (int j = 0; j < BOARD_SIZE + 2; j++) {
+                if (Thread.interrupted()) {
+                    try {
+                        throw new TimeUpException();
+                    } catch (TimeUpException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 newPosition.board[i][j] = board[i][j];
+            }
         return newPosition;
     }
 

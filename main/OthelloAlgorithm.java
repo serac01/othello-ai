@@ -18,7 +18,7 @@ public interface OthelloAlgorithm {
 	void setEvaluator(OthelloEvaluator evaluator);
 
 	//Returns what the algorithm considers to be the best move.
-	OthelloAction evaluate(OthelloPosition position, long endTime) throws IllegalMoveException, TimeUpException;
+	OthelloAction evaluate(OthelloPosition position) throws IllegalMoveException, TimeUpException;
 
 	// Sets the maximum search depth of the algorithm
 	void setSearchDepth(int depth);

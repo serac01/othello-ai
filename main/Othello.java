@@ -1,3 +1,5 @@
+import java.util.concurrent.*;
+
 public class Othello{
 	/**
 	 * Current behavior:
@@ -10,7 +12,7 @@ public class Othello{
 	 *
 	 * @author Henrik Björklund; serac01; josigabor
 	 */
-	public static void main(String [] args) throws IllegalMoveException, TimeUpException {
+	public static void main(String [] args) {
 		long startTime = System.currentTimeMillis();
 		if (args.length < 2) {
 			System.err.println("Too few arguments.\nUsage: othello <position_string> <time_limit_seconds>");
@@ -36,24 +38,41 @@ public class Othello{
 			return;
 		}
 
+		// Create a thread
+		ExecutorService executor = Executors.newSingleThreadExecutor();
 		OthelloPosition position = new OthelloPosition(boardString);
 		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator());
-
-		int depth = 1;
-		OthelloAction move;
 		OthelloAction bestMove = null;
 
-		try {
-			long endTime = startTime + timeLimit * 1000L;
-			while (System.currentTimeMillis() < endTime) {
-				algorithm.setSearchDepth(depth);
-				move = algorithm.evaluate(position, endTime);
+		long endTime = startTime + 3 * 1000;
+		int depth = 0;
+		while(true) {
+			depth++;
+			long remaining = endTime - System.currentTimeMillis();
+			if (remaining <= 0) break;
+			int finalDepth = depth;
+
+			// Run the set setSearchDepth and evaluate on the thread
+			Future<OthelloAction> future = executor.submit(() -> {
+				algorithm.setSearchDepth(finalDepth);
+				return algorithm.evaluate(position);
+			});
+
+			try {
+				// if evaluation is made before time it returns the move, if not, returns and exception
+				OthelloAction move = future.get(remaining, TimeUnit.MILLISECONDS);
 				if (move != null) bestMove = move;
-				depth++;
+			} catch (TimeoutException e) {
+				// Cancel the thread
+				future.cancel(true);
+				break;
+			} catch (Exception e) {
+				break;
 			}
-		} catch(TimeUpException e) {
-			// TODO
 		}
+
+		// Shutdown the executor
+		executor.shutdownNow();
 
 		if(bestMove == null)  bestMove = new OthelloAction("pass");
 
