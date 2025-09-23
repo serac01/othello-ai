@@ -3,13 +3,9 @@ public class CornerSideEvaluator implements OthelloEvaluator {
     private int cornerMultiplier = 1000;
     private int sideMultiplier = 10;
     private int pieceMultiplier = 1;
-    private int moveMultiplier = 1;
-    private boolean whitePlayer = true;
-
-    public void setWhitePlayer(boolean whiteplays) {whitePlayer = whiteplays;}
 
     @Override
-    public int evaluate(OthelloPosition pos) throws TimeUpException {
+    public int evaluate(OthelloPosition pos, boolean isWhitePlaying) throws TimeUpException {
         int white = 0, black = 0;
         int moveCount =  pos.getAllPossibleMoves().size();
         for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
@@ -40,21 +36,10 @@ public class CornerSideEvaluator implements OthelloEvaluator {
                 else if (pos.board[i][j]=='B') blackSides++;
             }
         }
-        int[][] subCorners = {{1,2},{2,1},{1,7},{2,8},{7,1},{8,2},{7,8},{8,7}};
-        int whiteSubCorners = 0, blackSubCorners = 0;
-//        for (int[] c : subCorners) {
-//            if (pos.board[c[0]][c[1]] == 'W') whiteSubCorners++;
-//            else if (pos.board[c[0]][c[1]] == 'B') blackSubCorners++;
-//        }
-//        int subCornerMultiplyer = white+black > 30 ? 10 : -1;
-        int subCornerMultiplyer = 0;
 
-        if(white+black>50){moveMultiplier = 0;}
-
-        return ((white - black) * pieceMultiplier
-                + (whiteCorners - blackCorners) * cornerMultiplier
-                + (whiteSides - blackSides) * sideMultiplier
-                + (whiteSubCorners - blackSubCorners) * subCornerMultiplyer
-                ) * (-1 * (whitePlayer ? -1 : 1))+ (moveCount * moveMultiplier);
+        int aiScore = (isWhitePlaying ? white : black) - (isWhitePlaying ? black : white);
+        int aiCorners = (isWhitePlaying ? whiteCorners : blackCorners) - (isWhitePlaying ? blackCorners : whiteCorners);
+        int aiSides = (isWhitePlaying ? whiteSides : blackSides) - (isWhitePlaying ? blackSides : whiteSides);
+        return (aiScore * pieceMultiplier) + (aiCorners * cornerMultiplier) + (aiSides * sideMultiplier);
     }
 }

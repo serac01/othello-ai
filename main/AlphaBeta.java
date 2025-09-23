@@ -8,22 +8,29 @@ import java.util.LinkedList;
  */
 public class AlphaBeta implements OthelloAlgorithm {
 	protected int searchDepth;
+	protected boolean isWhitePlaying;
 	protected static final int DefaultDepth = 7;
 	protected OthelloEvaluator evaluator;
 
 	public AlphaBeta() {
-		evaluator = new CountingEvaluator();
-		searchDepth = DefaultDepth;
+		this.evaluator = new CountingEvaluator();
+		this.searchDepth = DefaultDepth;
 	}
 
 	public AlphaBeta(OthelloEvaluator eval) {
-		evaluator = eval;
-		searchDepth = DefaultDepth;
+		this.evaluator = eval;
+		this.searchDepth = DefaultDepth;
+	}
+
+	public AlphaBeta(OthelloEvaluator eval, boolean isWhitePlaying) {
+		this.evaluator = eval;
+		this.isWhitePlaying = isWhitePlaying;
+		this.searchDepth = DefaultDepth;
 	}
 
 	public AlphaBeta(OthelloEvaluator eval, int depth) {
-		evaluator = eval;
-		searchDepth = depth;
+		this.evaluator = eval;
+		this.searchDepth = depth;
 	}
 
 	public void setEvaluator(OthelloEvaluator eval) {
@@ -47,7 +54,7 @@ public class AlphaBeta implements OthelloAlgorithm {
 			if (Thread.interrupted()) throw new TimeUpException();
 
 			OthelloPosition newPos = pos.makeMove(move);
-			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, newPos.toMove());
+			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, isWhitePlaying);
 
 			if (score > alpha) {
 				alpha = score;
@@ -62,7 +69,7 @@ public class AlphaBeta implements OthelloAlgorithm {
 			throw new TimeUpException();
 		}
 		if (depth == 0 || pos.isTerminal())
-			return evaluator.evaluate(pos);
+			return evaluator.evaluate(pos, isWhitePlaying);
 		return isMax ? maxValue(pos, depth,alpha, beta) : minValue(pos, depth,alpha, beta);
 	}
 
