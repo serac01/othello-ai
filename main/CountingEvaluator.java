@@ -7,7 +7,7 @@
  */
 public class CountingEvaluator implements OthelloEvaluator {
 
-	public int evaluate(OthelloPosition pos) {
+	public int evaluate(OthelloPosition pos, boolean isWhitePlaying) {
         int blackSquares = 0;
 		int whiteSquares = 0;
 		for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {

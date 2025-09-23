@@ -8,22 +8,29 @@ import java.util.LinkedList;
  */
 public class AlphaBeta implements OthelloAlgorithm {
 	protected int searchDepth;
+	protected boolean isWhitePlaying;
 	protected static final int DefaultDepth = 7;
 	protected OthelloEvaluator evaluator;
 
 	public AlphaBeta() {
-		evaluator = new CountingEvaluator();
-		searchDepth = DefaultDepth;
+		this.evaluator = new CountingEvaluator();
+		this.searchDepth = DefaultDepth;
 	}
 
 	public AlphaBeta(OthelloEvaluator eval) {
-		evaluator = eval;
-		searchDepth = DefaultDepth;
+		this.evaluator = eval;
+		this.searchDepth = DefaultDepth;
+	}
+
+	public AlphaBeta(OthelloEvaluator eval, boolean isWhitePlaying) {
+		this.evaluator = eval;
+		this.isWhitePlaying = isWhitePlaying;
+		this.searchDepth = DefaultDepth;
 	}
 
 	public AlphaBeta(OthelloEvaluator eval, int depth) {
-		evaluator = eval;
-		searchDepth = depth;
+		this.evaluator = eval;
+		this.searchDepth = depth;
 	}
 
 	public void setEvaluator(OthelloEvaluator eval) {
@@ -46,7 +53,7 @@ public class AlphaBeta implements OthelloAlgorithm {
 			if (Thread.interrupted()) throw new TimeUpException();
 
 			OthelloPosition newPos = pos.makeMove(move);
-			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, newPos.toMove());
+			int score = alphaBeta(newPos, searchDepth - 1, alpha, beta, false);
 
 			if (score > alpha) {
 				alpha = score;
@@ -57,25 +64,20 @@ public class AlphaBeta implements OthelloAlgorithm {
 	}
 
 	int alphaBeta(OthelloPosition pos, int depth, int alpha, int beta, boolean isMax)  throws IllegalMoveException, TimeUpException {
-		if (Thread.interrupted()) {
-			throw new TimeUpException();
-		}
+		if (Thread.interrupted()) throw new TimeUpException();
 		if (depth == 0 || pos.isTerminal())
-			return evaluator.evaluate(pos);
+			return evaluator.evaluate(pos, isWhitePlaying);
 		return isMax ? maxValue(pos, depth,alpha, beta) : minValue(pos, depth,alpha, beta);
 	}
 
 	int maxValue(OthelloPosition pos, int depth, int alpha, int beta)  throws IllegalMoveException, TimeUpException {
-		if (Thread.interrupted()) {
-			throw new TimeUpException();
-		}
+		if (Thread.interrupted()) throw new TimeUpException();
 		int value = Integer.MIN_VALUE;
 		for (OthelloAction move : pos.getAllPossibleMoves()) {
-			if (Thread.interrupted()) {
-				throw new TimeUpException();
-			}
+			if (Thread.interrupted()) throw new TimeUpException();
 			OthelloPosition newPos = pos.makeMove(move);
 			int eval = alphaBeta(newPos, depth - 1, alpha, beta, false);
+			if (Thread.interrupted()) throw new TimeUpException();
 			value = Math.max(value, eval);
 			alpha = Math.max(alpha, eval);
 			if (beta <= alpha) break; // cut off
@@ -84,16 +86,13 @@ public class AlphaBeta implements OthelloAlgorithm {
 	}
 
 	int minValue(OthelloPosition pos, int depth, int alpha, int beta)  throws IllegalMoveException, TimeUpException {
-		if (Thread.interrupted()) {
-			throw new TimeUpException();
-		}
+		if (Thread.interrupted()) throw new TimeUpException();
 		int value = Integer.MAX_VALUE;
 		for (OthelloAction move : pos.getAllPossibleMoves()) {
-			if (Thread.interrupted()) {
-				throw new TimeUpException();
-			}
+			if (Thread.interrupted()) throw new TimeUpException();
 			OthelloPosition newPos = pos.makeMove(move);
 			int eval = alphaBeta(newPos, depth - 1, alpha, beta, true);
+			if (Thread.interrupted()) throw new TimeUpException();
 			value = Math.min(value, eval);
 			beta = Math.min(beta, eval);
 			if (beta <= alpha) break; // cut off
