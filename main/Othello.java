@@ -41,15 +41,16 @@ public class Othello{
 		// Create a thread
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		OthelloPosition position = new OthelloPosition(boardString);
-		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator());
+		boolean isWhitePlaying = (boardString.charAt(0) == 'W');
+		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator(), isWhitePlaying);
 		OthelloAction bestMove = null;
 
-		long endTime = startTime + timeLimit * 1000L;
+		long endTime = (startTime + timeLimit * 500L) - 300L;
 		int depth = 0;
-		while(true) {
-			depth++;
+		while (true) {
 			long remaining = endTime - System.currentTimeMillis();
 			if (remaining <= 0) break;
+			depth++;
 			int finalDepth = depth;
 
 			// Run the set setSearchDepth and evaluate on the thread
