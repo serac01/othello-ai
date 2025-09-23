@@ -14,6 +14,6 @@
 public interface OthelloEvaluator {
 
 	// Returns an integer, representing a heuristic evaluation of the position.
-	int evaluate(OthelloPosition position) throws TimeUpException;
+	int evaluate(OthelloPosition position, boolean isWhitePlaying) throws TimeUpException;
 
 }

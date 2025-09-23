@@ -1,9 +1,8 @@
 public class CornerSideEvaluator implements OthelloEvaluator {
 
     @Override
-    public int evaluate(OthelloPosition pos) throws TimeUpException {
+    public int evaluate(OthelloPosition pos, boolean isWhitePlaying) throws TimeUpException {
         int white = 0, black = 0;
-
         for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
             for (int j = 1; j <= OthelloPosition.BOARD_SIZE; j++) {
                 if (Thread.interrupted()) throw new TimeUpException();
@@ -50,8 +49,9 @@ public class CornerSideEvaluator implements OthelloEvaluator {
             }
         }
 
-        return (white - black) * pieceMultiplier
-                + (whiteCorners - blackCorners) * cornerMultiplier
-                + (whiteSides - blackSides) * sideMultiplier;
+        int aiScore = (isWhitePlaying ? white : black) - (isWhitePlaying ? black : white);
+        int aiCorners = (isWhitePlaying ? whiteCorners : blackCorners) - (isWhitePlaying ? blackCorners : whiteCorners);
+        int aiSides = (isWhitePlaying ? whiteSides : blackSides) - (isWhitePlaying ? blackSides : whiteSides);
+        return (aiScore * pieceMultiplier) + (aiCorners * cornerMultiplier) + (aiSides * sideMultiplier);
     }
 }

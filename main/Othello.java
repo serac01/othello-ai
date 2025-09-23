@@ -41,7 +41,8 @@ public class Othello{
 		// Create a thread
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		OthelloPosition position = new OthelloPosition(boardString);
-		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator());
+		boolean isWhitePlaying = (boardString.charAt(0) == 'W');
+		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator(), isWhitePlaying);
 		OthelloAction bestMove = null;
 
 		long endTime = startTime + timeLimit * 1000L;
