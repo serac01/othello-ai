@@ -45,7 +45,7 @@ public class Othello{
 		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator(), isWhitePlaying);
 		OthelloAction bestMove = null;
 
-		long endTime = (startTime + timeLimit * 500L) - 300L;
+		long endTime = (startTime + timeLimit * 1000L) - 400L;
 		int depth = 0;
 		while (true) {
 			long remaining = endTime - System.currentTimeMillis();
