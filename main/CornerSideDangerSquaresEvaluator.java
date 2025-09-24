@@ -1,10 +1,11 @@
-public class CornerSideEvaluator implements OthelloEvaluator {
+public class CornerSideDangerSquaresEvaluator implements OthelloEvaluator {
 
     @Override
     public int evaluate(OthelloPosition pos, boolean isWhitePlaying) throws TimeUpException {
         int cornerMultiplier = 1000;
         int sideMultiplier = 10;
         int pieceMultiplier = 1;
+        int dangerMultiplier = -10;
         int white = 0, black = 0;
 
         for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
@@ -15,6 +16,7 @@ public class CornerSideEvaluator implements OthelloEvaluator {
                 else if (c == 'B') black++;
             }
         }
+
         if(pos.isTerminal()) return (white - black) * 100000;
 
         int[][] corners = {{1,1},{1,8},{8,1},{8,8}};
@@ -37,9 +39,31 @@ public class CornerSideEvaluator implements OthelloEvaluator {
             }
         }
 
+        int whiteDanger = 0, blackDanger = 0;
+        int[][] dangerSquares = {
+                {1,2},{2,1},{2,2},
+                {1,7},{2,8},{2,7},
+                {7,1},{8,2},{7,2},
+                {8,7},{7,8},{7,7}
+        };
+        for (int[] s : dangerSquares) {
+            if (Thread.interrupted()) throw new TimeUpException();
+            char square = pos.board[s[0]][s[1]];
+            boolean adjacentCornerEmpty = false;
+            if (s[0]<=2 && s[1]<=2) adjacentCornerEmpty = pos.board[1][1]=='E';
+            if (s[0]<=2 && s[1]>=7) adjacentCornerEmpty = adjacentCornerEmpty || pos.board[1][8]=='E';
+            if (s[0]>=7 && s[1]<=2) adjacentCornerEmpty = adjacentCornerEmpty || pos.board[8][1]=='E';
+            if (s[0]>=7 && s[1]>=7) adjacentCornerEmpty = adjacentCornerEmpty || pos.board[8][8]=='E';
+
+            if (!adjacentCornerEmpty) continue;
+            if (square == 'W') whiteDanger++;
+            else if (square == 'B') blackDanger++;
+        }
+
         int aiScore = (isWhitePlaying ? white : black) - (isWhitePlaying ? black : white);
         int aiCorners = (isWhitePlaying ? whiteCorners : blackCorners) - (isWhitePlaying ? blackCorners : whiteCorners);
         int aiSides = (isWhitePlaying ? whiteSides : blackSides) - (isWhitePlaying ? blackSides : whiteSides);
-        return (aiScore * pieceMultiplier) + (aiCorners * cornerMultiplier) + (aiSides * sideMultiplier);
+        int aiDanger = (isWhitePlaying ? whiteDanger : blackDanger) - (isWhitePlaying ? blackDanger : whiteDanger);
+        return (aiScore * pieceMultiplier) + (aiCorners * cornerMultiplier) + (aiSides * sideMultiplier) + (aiDanger * dangerMultiplier);
     }
 }

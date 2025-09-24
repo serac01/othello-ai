@@ -5,7 +5,6 @@ public class Othello{
 	 * Current behavior:
 	 *   - Uses Alpha-Beta pruning with a fixed search depth.
 	 *   - Prints the best move found at that depth.
-	 *
 	 * Assignment requirement:
 	 *   - Replace fixed-depth search with Iterative Deepening Search (IDS)
 	 *     that respects a time limit (provided as an argument).
@@ -41,11 +40,11 @@ public class Othello{
 		// Create a thread
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		OthelloPosition position = new OthelloPosition(boardString);
-		boolean isWhitePlaying = (boardString.charAt(0) == 'W');
-		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideEvaluator(), isWhitePlaying);
+		boolean isWhitePlaying = position.maxPlayerRound;
+		OthelloAlgorithm algorithm = new AlphaBeta(new CornerSideVariableWeightsEvaluator(), isWhitePlaying);
 		OthelloAction bestMove = null;
 
-		long endTime = (startTime + timeLimit * 1000L) - 400L;
+		long endTime = (startTime + timeLimit * 1000L) - 300L;
 		int depth = 0;
 		while (true) {
 			long remaining = endTime - System.currentTimeMillis();

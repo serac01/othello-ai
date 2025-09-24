@@ -1,12 +1,8 @@
-public class CornerSideEvaluator implements OthelloEvaluator {
+public class CornerSideVariableWeightsEvaluator implements OthelloEvaluator {
 
     @Override
     public int evaluate(OthelloPosition pos, boolean isWhitePlaying) throws TimeUpException {
-        int cornerMultiplier = 1000;
-        int sideMultiplier = 10;
-        int pieceMultiplier = 1;
         int white = 0, black = 0;
-
         for (int i = 1; i <= OthelloPosition.BOARD_SIZE; i++) {
             for (int j = 1; j <= OthelloPosition.BOARD_SIZE; j++) {
                 if (Thread.interrupted()) throw new TimeUpException();
@@ -16,6 +12,22 @@ public class CornerSideEvaluator implements OthelloEvaluator {
             }
         }
         if(pos.isTerminal()) return (white - black) * 100000;
+
+        int totalOfPieces = white + black;
+        int pieceMultiplier, cornerMultiplier, sideMultiplier;
+        if (totalOfPieces < 20) {
+            pieceMultiplier = 1;
+            cornerMultiplier = 1500;
+            sideMultiplier = 20;
+        } else if (totalOfPieces < 50) {
+            pieceMultiplier = 5;
+            cornerMultiplier = 800;
+            sideMultiplier = 10;
+        } else {
+            pieceMultiplier = 100;
+            cornerMultiplier = 300;
+            sideMultiplier = 5;
+        }
 
         int[][] corners = {{1,1},{1,8},{8,1},{8,8}};
         int whiteCorners = 0, blackCorners = 0;
