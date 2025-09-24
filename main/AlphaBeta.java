@@ -40,7 +40,9 @@ public class AlphaBeta implements OthelloAlgorithm {
 	public void setSearchDepth(int depth) {
 		searchDepth = depth;
 	}
-
+	/*
+		This function calls the first recursion
+	 */
 	public OthelloAction evaluate(OthelloPosition pos) throws IllegalMoveException, TimeUpException {
 		int alpha = Integer.MIN_VALUE;
 		int beta = Integer.MAX_VALUE;
@@ -63,14 +65,18 @@ public class AlphaBeta implements OthelloAlgorithm {
 		}
 		return bestValue;
 	}
-
+	/*
+		The function handles starting the max-min search call based on the isMax parameter
+	 */
 	int alphaBeta(OthelloPosition pos, int depth, int alpha, int beta, boolean isMax)  throws IllegalMoveException, TimeUpException {
 		if (Thread.interrupted()) throw new TimeUpException();
 		if (depth == 0 || pos.isTerminal())
 			return evaluator.evaluate(pos, isWhitePlaying);
 		return isMax ? maxValue(pos, depth,alpha, beta) : minValue(pos, depth,alpha, beta);
 	}
-
+	/*
+		Implements the Max search, calling a Min search on a lower layer if depth allows
+	 */
 	int maxValue(OthelloPosition pos, int depth, int alpha, int beta)  throws IllegalMoveException, TimeUpException {
 		if (Thread.interrupted()) throw new TimeUpException();
 		int value = Integer.MIN_VALUE;
@@ -85,7 +91,9 @@ public class AlphaBeta implements OthelloAlgorithm {
 		}
 		return value;
 	}
-
+	/*
+        Implements the Min search, calling a Max search on a lower layer if depth allows
+    */
 	int minValue(OthelloPosition pos, int depth, int alpha, int beta)  throws IllegalMoveException, TimeUpException {
 		if (Thread.interrupted()) throw new TimeUpException();
 		int value = Integer.MAX_VALUE;
