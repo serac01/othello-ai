@@ -219,6 +219,10 @@ public class OthelloPosition {
 
     public boolean toMove() { return maxPlayerRound; }
 
+    /*
+        Creating a new position by applying the OthelloAction on a copied version, while also changing the player
+        Using the flipDiscs helper function
+     */
     public OthelloPosition makeMove(OthelloAction action) throws IllegalMoveException, TimeUpException {
         if (Thread.interrupted()) throw new TimeUpException();
         OthelloPosition newPos = this.clonePos();
@@ -243,7 +247,9 @@ public class OthelloPosition {
 
         return newPos;
     }
-
+    /*
+        Flips oponent's discs in a given direction if the rules allow it
+     */
     private void flipDiscs(int row, int col, int dRow, int dCol) {
         int i = row + dRow;
         int j = col + dCol;

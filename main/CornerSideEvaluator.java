@@ -1,3 +1,7 @@
+/*
+    Implements our new heuristics, based on piece count, corner and side position factoring,
+    adjusted to also work when playing black
+ */
 public class CornerSideEvaluator implements OthelloEvaluator {
 
     private int cornerMultiplier = 1000;
